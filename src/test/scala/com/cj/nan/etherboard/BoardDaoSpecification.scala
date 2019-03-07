@@ -39,7 +39,7 @@
 package com.cj.nan.etherboard
 
 import org.scalatest.matchers.ShouldMatchers
-import org.scalatest.{FunSpec, GivenWhenThen, Spec}
+import org.scalatest.{Matchers, FunSpec, GivenWhenThen, Spec}
 import java.io.FileInputStream
 import java.io.File
 import org.junit.runner.RunWith
@@ -50,8 +50,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import scala.beans.BeanProperty
 
 @RunWith(classOf[JUnitRunner])
-class BoardDaoSpecification extends FunSpec with ShouldMatchers with GivenWhenThen {
-    
+class BoardDaoSpecification extends FunSpec with Matchers with GivenWhenThen {
+//class BoardDaoSpecification extends FunSpec with ShouldMatchers with GivenWhenThen {
+
+
     describe("A BoardDao") {
         it("should save a Board object") {
             Given("A BoardDao and a new Board to save")
@@ -59,11 +61,11 @@ class BoardDaoSpecification extends FunSpec with ShouldMatchers with GivenWhenTh
                 val boardName:String = Random.alphanumeric take 30 mkString
     
                 val aBoard = new Board(boardName, boardObject)
-                val boardDao = BoardDaoImpl()
+                val boardDao = new BoardDaoImpl()
             When("saving the board")
                 boardDao.saveBoard(aBoard)
             Then("a text file with the board contents should be saved")
-                val file:File = new File("target/data", boardName)
+                val file:File = new File("target/test-data", boardName)
                 file.exists() should  be (true)
                 val jackson = new ObjectMapper()
                 val retrievedBoard = jackson.readValue(new FileInputStream(file), classOf[Board])
@@ -77,15 +79,15 @@ class BoardDaoSpecification extends FunSpec with ShouldMatchers with GivenWhenTh
                 val boardName:String = Random.alphanumeric take 30 mkString
 
                 val aBoard = new Board(boardName, boardObject)
-                BoardDaoImpl().saveBoard(aBoard)
+                new BoardDaoImpl().saveBoard(aBoard)
             When("getting the saved board")
-                val retrievedBoard:Board = BoardDaoImpl().getBoard(boardName)
+                val retrievedBoard:Board = new BoardDaoImpl().getBoard(boardName)
             Then("the board should be retrieved successfully")
                 retrievedBoard.name should equal (aBoard.name)
                 val retrievedBoardObject:BoardObject = retrievedBoard.findObject(1).get
                 retrievedBoardObject.name should equal ("some name")
                 retrievedBoardObject.kind should equal ("some kind")
-                val file:File = new File("target/data", boardName)
+                val file:File = new File("target/test-data", boardName)
                 file.exists() should  be (true)
                 file.delete() should  be (true)
         }
@@ -101,13 +103,13 @@ class BoardDaoSpecification extends FunSpec with ShouldMatchers with GivenWhenTh
                 boardObject.kind should equal ("stickie")
 
                 val aBoard: Board = new Board(boardName, boardObject)
-                BoardDaoImpl().saveBoard(aBoard)
+                new BoardDaoImpl().saveBoard(aBoard)
             When("getting the saved board")
-                val retrievedBoard:Board = BoardDaoImpl().getBoard(boardName)
+                val retrievedBoard:Board = new BoardDaoImpl().getBoard(boardName)
             Then("the board's stickie should now be a sticky")
                 val retrievedBoardObject:BoardObject = retrievedBoard.findObject(1).get
                 retrievedBoardObject.kind should equal ("sticky")
-                val file:File = new File("target/data", boardName)
+                val file:File = new File("target/test-data", boardName)
                 file.exists() should  be (true)
                 file.delete() should  be (true)
         }

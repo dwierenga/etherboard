@@ -72,46 +72,77 @@
 
     <script type="text/javascript">
 
-      var showdown;
-
-      $(document).ready(function () {
-        var body = $("body"),
-        boardId = getQueryParam("board");
-
-        showdown = new Showdown.converter();
-
-        if(boardId) {
-            body.addClass("board");
-            $('title').text(boardId + ' - Etherboard')
-            Board(body, boardId);
-        } else {
-            body.removeClass("board");
-            $.ajax({
-                cache: false,
-                url: "/board",
-                success: function (names) {
-                    $('body').append(
-                        tmpl("newBoardTemplate", {boards: names})
-                    );
-
-                    $("#createNewBoardButton").button().click(function () {
-                        $("#newBoardForm").submit(function () {
-                            $(this).find(':input[value=""]').attr("disabled", "disabled");
-                        }).dialog({title: "New Board"});
-                    });
-
-                    $("#syncType").change(function () {
-                        $("#pivotalOptions").toggle();
-                    });
-
-                    $("#createNewBoardSubmit").button();
-                },
-                error: function (jqxhr, textStatus, errorThrown) {
-                    alert("ERROR:" + textStatus);
-                }
-            });
+        function validate(truthCond, errMessage, event){
+            if (!truthCond()){
+                alert(errMessage);
+                event.preventDefault();
+            }
         }
-    });
+
+        function frontPage(body, boardId){
+
+            showdown = new Showdown.converter();
+
+            if(boardId) {
+                body.addClass("board");
+                $('title').text(boardId + ' - Etherboard')
+                Board(body, boardId);
+            } else {
+                body.removeClass("board");
+                $.ajax({
+                    cache: false,
+                    url: "/board",
+                    success: function (names) {
+                        $('body').append(
+                                tmpl("newBoardTemplate", {boards: names})
+                        );
+
+                        $("#createNewBoardButton").button().click(function () {
+                            $("#newBoardForm").submit(function () {
+                                $(this).find(':input[value=""]').attr("disabled", "disabled");
+                            }).dialog({title: "New Board"});
+                        });
+
+                        for (var i = 0; i < names.length; i++){
+                            $("#existingBoardName").append($("<option></option>").attr("value",names[i]).text(names[i]));
+                        }
+
+                        $("#cloneBoardButton").button().click(function(){
+                            $("#cloneBoardForm").dialog({
+                               title: "Clone Board",
+                               modal: true,
+                               closeText: "Cancel"
+                            });
+                        });
+
+                        $("#syncType").change(function () {
+                            $("#pivotalOptions").toggle();
+                        });
+
+                        $("#createCloneBoardSubmit").button().click(function(e){
+                            var name = $("#cloneBoardName").val(),
+                                existingBoard = $("#existingBoardName").val();
+                            var trimmedName = $.trim(name);
+                            validate(function(){ return trimmedName.length > 0; }, "Please enter a name for the cloned board", e);
+                            validate(function(){ return $.inArray(trimmedName,names) === -1; }, "This is a duplicate board name!  Please select another ...", e);
+                            $("#cloneBoardForm").prop("action", "/board/"+existingBoard+"/cloneBoard");
+                        });
+
+                        $("#createNewBoardSubmit").button();
+                    },
+                    error: function (jqxhr, textStatus, errorThrown) {
+                        alert("ERROR:" + textStatus);
+                    }
+                });
+            }
+
+        }
+
+        $(document).ready(function () {
+            var body = $("body"),
+                    boardId = getQueryParam("board");
+            frontPage(body,boardId)
+        })
 
 
     </script>
@@ -125,12 +156,23 @@
         $.each(boards, function(index, boardName) {
         var parsedName = decodeURIComponent(boardName);
         %>
-            <li>
-                <a href="?board=<%= boardName %>"><%= parsedName %></a>
-            </li>
+        <li>
+            <a href="?board=<%= boardName %>"><%= parsedName %></a>
+        </li>
         <% }); %>
 
         <input type="button" id="createNewBoardButton" value="Create New Board">
+        <input type="button" id="cloneBoardButton" value="Clone Board">
+
+        <form id="cloneBoardForm" style="display:none;" action="/board/{boardId}/cloneBoard" method="POST" >
+             <label for="existingBoardName">Existing Board: </label>
+             <select id="existingBoardName"></select>
+             <br />
+            <label for="cloneBoardName">Name: </label>
+            <input type="text" id="cloneBoardName" name="cloneName" placeholder="New Board Name">
+            <br />
+            <input type="submit" value="Create" id="createCloneBoardSubmit"/>
+        </form>
 
         <form id="newBoardForm" style="display:none;" action="/board" method="POST">
             <label for="newBoardName">Name: </label>
@@ -171,7 +213,7 @@
             <div class="stickyContent"></div>
         </div>
         <div class="stickyBack">
-        <div class="extraNotes"></div>
+            <div class="extraNotes"></div>
         </div>
     </div>
 </script>

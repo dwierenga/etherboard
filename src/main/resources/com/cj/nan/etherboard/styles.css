@@ -138,13 +138,11 @@ div.bucket {
 }
 
 div.bucket .stickyContent {
-    margin-top: 10%;
     font-size: 1.3em;
-    padding: 2px;
-    border-radius: 10px;
-    width: 70%;
+    padding: 10px;
+    margin:0px;
+    width: 100%;
     display: inline-block;
-    background-color: hsla(357, 62%, 50%, 0.41);
 }
 
 div.stickyeditor textarea {
@@ -179,12 +177,45 @@ div.stickyHeader {
   transition: all 0.3s ease-in-out;
 }
 
-.bucket > .stickyHeader {
-  background:#FF0000;
+.bucketControls {
+  box-shadow: #ccc 2px 2px 2px;  
+  opacity:0;
+  -webkit-transition: all 0.3s ease-in-out;
+  -moz-transition: all 0.3s ease-in-out;
+  -o-transition: all 0.3s ease-in-out;
+  transition: all 0.3s ease-in-out;
+   position: absolute;
+   width: 100%;
 }
 
-div.bucket:hover .stickyHeader {
+
+div.bucket:hover .bucketControls {
   opacity: 0.3;
+}
+
+.bucketControls img {
+	width:16px;
+	height:16px;
+}
+
+.bucketControls {
+	
+    height:30px;
+}
+
+.bucketHeader {
+    color: white;
+    position: absolute;
+    width: 100%;
+    font-weight: bold;
+    background: #aaaaaa;
+    height:20px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+}
+
+.bucket > .stickyHeader {
+  background:#aaaaaa;
 }
 
 div.sticky:hover > .stickyHeader {
@@ -339,18 +370,38 @@ div.sticky.flip div.stickyBack {
 
 
 div.bucket {
-    background-repeat: no-repeat;
-    background-image: url('bucket.png');
-    background-size:100% 100%;
-    border: none;
+    border: 1px solid gray;
+    border-radius:5px;
+    background:white;
+    overflow:hidden;
+    box-shadow: 10px 10px 5px #888888;
 }
-
+.bucketListHolder {
+    margin-top: 0px;
+    display:block;
+    overflow:scroll;
+    height: 100%;
+    
+}
+.bucketList {
+    padding-top: 30px;
+}
 div.bucket li {
-    list-style-image: url('bucket-entry.gif');
 }
 
+.bucketList li {
+    display: block;
+    overflow: hidden;
+    text-align: left;
+    padding: 4px;
+    padding-left: 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+   	padding-top:10px;
+}
 div.bucket .bucketList .remove{
     padding-left: .5em;
+    float:right;
 }
 
 div.header {

@@ -42,13 +42,13 @@
 function Bucket(bucket, parent, boardId, createIssueCallback, webSocketClient) {
     var bucketId = 'bucket' + bucket.id,
         widget = $('<div id= ' + bucketId + ' class="bucket">' +
-                       '<div class="stickyHeader">' +
+                	   '<div class="bucketHeader"></div>' +
+                       '<div class="bucketControls">' +
                            '<img class="stickyEditButton" title="Edit" src="pencil.png" />' +
                            '<img class="stickyCloseButton" title="Delete" src="close_icon.gif" />' +
                            '<div style="clear:both"></div>' +
                        '</div>' +
-                       '<div class="stickyContent"></div>' +
-                       '<ol class="bucketList"></ol>' +
+                       '<div class="bucketListHolder"><ol class="bucketList"></ol></div>' +
                    '</div>').css(bucket.pos).appendTo(parent);
 
     function doSave() {
@@ -67,7 +67,7 @@ function Bucket(bucket, parent, boardId, createIssueCallback, webSocketClient) {
     function bucketSave() {
         bucket.contents = [];
         widget.find(".bucketList > li > span").each(function () {
-            bucket.contents.push({ name: $(this).html(), extraNotes: $(this).data("extraNotes") });
+            bucket.contents.push({ name: $(this).data("content"), extraNotes: $(this).data("extraNotes") });
         });
         doSave();
     }
@@ -79,19 +79,25 @@ function Bucket(bucket, parent, boardId, createIssueCallback, webSocketClient) {
                 }
             }), i;
 
-        widget.find('.stickyContent').html(bucket.name);
+        widget.find('.bucketHeader').html(bucket.name);
         widget.height(bucket.height || 150);
         widget.width(bucket.width || 150);
 
         for (i = 0; i < bucket.contents.length; i++) {
-            $("<li></li>").append(
-			    $("<span></span>").html(bucket.contents[i].name)
-		    ).append("<a href='#' class='remove'>--&gt;</a>").appendTo(bucketList).find("span").data("extraNotes", bucket.contents[i].extraNotes);
+        	
+        	var text = $(bucket.contents[i].name).text()
+        	var content = text.split("\n")[0];
+        	
+            var item = $("<li></li>").append(
+			    $("<span></span>").html(content)
+		    ).append("<a href='#' class='remove'>--&gt;</a>").appendTo(bucketList).find("span");
+            item.data("extraNotes", bucket.contents[i].extraNotes);
+            item.data("content", bucket.contents[i].name);
         }
 
         bucketList.find(".remove").click(function (e) {
             var sticky = $(this).parent().find("span"),
-                name = sticky.html(),
+                name = sticky.data("content"),
                 extraNotes = sticky.data("extraNotes");
 
             createIssueCallback({ name: name, extraNotes: extraNotes, kind: "sticky", pos: { top: $(this).offset().top - 75, left: $(this).offset().left - 75 } });
@@ -104,6 +110,8 @@ function Bucket(bucket, parent, boardId, createIssueCallback, webSocketClient) {
             }));
 
             bucketSave();
+            
+            e.preventDefault();
         });
     }
 
@@ -178,7 +186,7 @@ function Bucket(bucket, parent, boardId, createIssueCallback, webSocketClient) {
             stop: function (event, ui) {
                 bucket.width = widget.width();
                 bucket.height = widget.height();
-                widget.find(".stickyHeader").width(widget.width() + 4);
+                widget.find(".bucketControls").width(widget.width());
 
                 doSave();
                 update();

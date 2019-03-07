@@ -144,8 +144,10 @@ function Board(parent, boardId) {
                 dataType: 'json',
                 success: function (data) {
                     var columnCount = 1;
-
-                    ws = WebSocketClient(data.boardUpdatesWebSocket, {
+                    
+                    var websocketUrl = data.boardUpdatesWebSocket.replace("REPLACE_ME_WITH_HOST", window.location.hostname);
+                    
+                    ws = WebSocketClient(websocketUrl, {
                         onMessage: function (event) {
                             var msg, newPosition, widgetId;
                             msg = JSON.parse(event.data);

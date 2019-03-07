@@ -42,8 +42,8 @@ import scala.collection.JavaConversions._
 import java.io.{File => Path, FileOutputStream, FileInputStream}
 import com.fasterxml.jackson.databind.ObjectMapper
 
-object BoardDaoImpl extends BoardDao {
-    val dataPath = new Path("target/data")
+class BoardDaoImpl(dataPath:Path = new Path("target/test-data")) extends BoardDao {
+    
 
     def apply(): BoardDao = {
         dataPath.mkdirs()

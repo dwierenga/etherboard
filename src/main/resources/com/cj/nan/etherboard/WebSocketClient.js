@@ -113,6 +113,7 @@
 
 
 function WebSocketClient(url, handlers) {
+	console.log("WebSocketClient: " + url);
     var socket;
 
     if (!window.WebSocket && window.MozWebSocket) {

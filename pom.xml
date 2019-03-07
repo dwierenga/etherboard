@@ -44,6 +44,60 @@
                     </execution>
                 </executions>
             </plugin>
+
+
+            <plugin>
+                <groupId>com.cj.qunit.mojo</groupId>
+                <artifactId>qunit-maven-plugin</artifactId>
+                <!--<version>3.0.1-SNAPSHOT</version>-->
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>test</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <!--<webRoot>/main</webRoot>-->
+                    <webPathToRequireDotJsConfig>/require-config.js</webPathToRequireDotJsConfig>
+                    <extraPathsToServe>
+                        <!--src/main/resources/com/cj/nan/etherboard-->
+                        <!--<path>src/main/resources/cj/developerportal</path>-->
+                        <!--<path>src/test/resources/cj/developerportal</path>-->
+
+                        <!--<path>src/main/resources/com/cj/nan/etherboard</path>-->
+                        <!--<path>src/test/resources/com/cj/nan/etherboard</path>-->
+
+                        <path>src/main/javascript</path>
+                        <path>src/test/javascript</path>
+
+                        <!--<path>src/main</path>-->
+                        <!--<path>src/test</path>-->
+                    </extraPathsToServe>
+                </configuration>
+            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>com.cj.jshintmojo</groupId>-->
+                <!--<artifactId>jshint-maven-plugin</artifactId>-->
+                <!--<version>0.0.10</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>lint</goal>-->
+                        <!--</goals>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--<options>browser,bitwise,curly,latedef,undef,eqeqeq,onevar,immed,nomen,noarg,noempty,nonew</options>-->
+                    <!--&lt;!&ndash; see http://www.jshint.com/options/ &ndash;&gt;-->
+                    <!--<excludes>-->
+                        <!--&lt;!&ndash;<exclude>/src/main/resources/cj/developerportal/javascript/lib</exclude>&ndash;&gt;-->
+                    <!--</excludes>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
+
 <!--
             <plugin>
                 <groupId>com.mycila.maven-license-plugin</groupId>
@@ -105,26 +159,26 @@
                     </execution>
                 </executions>
             </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>jslint-maven-plugin</artifactId>
-                <version>1.0.0</version>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>jslint</goal>
-                        </goals>
-                        <phase>validate</phase>
-                    </execution>
-                </executions>
-                <configuration>
-                    <sourceJsFolder>${basedir}/src/main/resources</sourceJsFolder>
-                    <excludes>
-                        <exclude>**/jquery/*.js</exclude>
-                        <exclude>com/cj/nan/etherboard/util.js</exclude>
-                    </excludes>
-                </configuration>
-            </plugin>
+            <!--<plugin>-->
+                <!--<groupId>org.codehaus.mojo</groupId>-->
+                <!--<artifactId>jslint-maven-plugin</artifactId>-->
+                <!--<version>1.0.0</version>-->
+                <!--<executions>-->
+                    <!--<execution>-->
+                        <!--<goals>-->
+                            <!--<goal>jslint</goal>-->
+                        <!--</goals>-->
+                        <!--<phase>validate</phase>-->
+                    <!--</execution>-->
+                <!--</executions>-->
+                <!--<configuration>-->
+                    <!--<sourceJsFolder>${basedir}/src/main/resources</sourceJsFolder>-->
+                    <!--<excludes>-->
+                        <!--<exclude>**/jquery/*.js</exclude>-->
+                        <!--<exclude>com/cj/nan/etherboard/util.js</exclude>-->
+                    <!--</excludes>-->
+                <!--</configuration>-->
+            <!--</plugin>-->
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -277,8 +331,8 @@
         </dependency>
         <dependency>
             <groupId>org.scalatest</groupId>
-            <artifactId>scalatest_2.10</artifactId>
-            <version>1.9.1</version>
+            <artifactId>scalatest_2.11</artifactId>
+            <version>2.2.4</version>
             <scope>test</scope>
         </dependency>
         <dependency>

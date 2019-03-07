@@ -40,7 +40,7 @@ package com.cj.nan.etherboard
 
 import org.junit.runner.RunWith
 import org.scalatest.junit.JUnitRunner
-import org.scalatest.FunSuite
+import org.scalatest.{Matchers, FunSuite}
 import org.scalatest.matchers.ShouldMatchers
 import java.lang.String
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -48,7 +48,8 @@ import scala.xml.Node
 import scala.xml.XML
 
 @RunWith(classOf[JUnitRunner])
-class EtherboardTest extends FunSuite with ShouldMatchers {
+class EtherboardTest extends FunSuite with Matchers {
+//class EtherboardTest extends FunSuite with ShouldMatchers {
 
     test("Position is initialized with position 0,0") {
         val myPosition = new Position()

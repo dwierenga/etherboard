@@ -56,7 +56,6 @@ class BoardRealtimeUpdateServer(port:Int)  {
 
     def connectionHandler(uri:String, channel:Channel) {
         val decoder: QueryStringDecoder = new QueryStringDecoder(uri)
-        println(uri)
         val boardName = decoder.getParameters.get("boardName").get(0)
 
         BoardUpdatesActor ! NewConnection(boardName, channel)
